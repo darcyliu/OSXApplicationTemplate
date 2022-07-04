@@ -12,6 +12,9 @@
 		C729655C1D173F4F00D74780 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C729655B1D173F4F00D74780 /* Assets.xcassets */; };
 		C729656A1D173F4F00D74780 /* OSXApplicationTemplateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C72965691D173F4F00D74780 /* OSXApplicationTemplateTests.m */; };
 		C72965751D173F4F00D74780 /* OSXApplicationTemplateUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = C72965741D173F4F00D74780 /* OSXApplicationTemplateUITests.m */; };
+		C7E1F9F32873837A003D85A5 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E1F9F22873837A003D85A5 /* MainViewController.m */; };
+		C7E1F9F628738409003D85A5 /* SidebarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E1F9F528738409003D85A5 /* SidebarViewController.m */; };
+		C7E1F9F92873845A003D85A5 /* ContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E1F9F82873845A003D85A5 /* ContentViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +47,12 @@
 		C72965701D173F4F00D74780 /* OSXApplicationTemplateUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OSXApplicationTemplateUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C72965741D173F4F00D74780 /* OSXApplicationTemplateUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSXApplicationTemplateUITests.m; sourceTree = "<group>"; };
 		C72965761D173F4F00D74780 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C7E1F9F12873837A003D85A5 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		C7E1F9F22873837A003D85A5 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		C7E1F9F428738409003D85A5 /* SidebarViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SidebarViewController.h; sourceTree = "<group>"; };
+		C7E1F9F528738409003D85A5 /* SidebarViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SidebarViewController.m; sourceTree = "<group>"; };
+		C7E1F9F72873845A003D85A5 /* ContentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentViewController.h; sourceTree = "<group>"; };
+		C7E1F9F82873845A003D85A5 /* ContentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +108,12 @@
 				C729655B1D173F4F00D74780 /* Assets.xcassets */,
 				C72965601D173F4F00D74780 /* Info.plist */,
 				C72965581D173F4F00D74780 /* Supporting Files */,
+				C7E1F9F12873837A003D85A5 /* MainViewController.h */,
+				C7E1F9F22873837A003D85A5 /* MainViewController.m */,
+				C7E1F9F428738409003D85A5 /* SidebarViewController.h */,
+				C7E1F9F528738409003D85A5 /* SidebarViewController.m */,
+				C7E1F9F72873845A003D85A5 /* ContentViewController.h */,
+				C7E1F9F82873845A003D85A5 /* ContentViewController.m */,
 			);
 			path = OSXApplicationTemplate;
 			sourceTree = "<group>";
@@ -191,7 +206,7 @@
 		C729654A1D173F4F00D74780 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 1340;
 				ORGANIZATIONNAME = "Darcy Liu";
 				TargetAttributes = {
 					C72965511D173F4F00D74780 = {
@@ -209,7 +224,7 @@
 			};
 			buildConfigurationList = C729654D1D173F4F00D74780 /* Build configuration list for PBXProject "OSXApplicationTemplate" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -258,7 +273,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				C729655A1D173F4F00D74780 /* main.m in Sources */,
+				C7E1F9F92873845A003D85A5 /* ContentViewController.m in Sources */,
+				C7E1F9F32873837A003D85A5 /* MainViewController.m in Sources */,
 				C72965571D173F4F00D74780 /* AppDelegate.m in Sources */,
+				C7E1F9F628738409003D85A5 /* SidebarViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -298,18 +316,30 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
@@ -331,7 +361,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -342,18 +372,30 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
@@ -369,7 +411,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 			};
@@ -379,6 +421,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = OSXApplicationTemplate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -391,6 +434,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = OSXApplicationTemplate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -468,6 +512,7 @@
 				C729657B1D173F4F00D74780 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C729657C1D173F4F00D74780 /* Build configuration list for PBXNativeTarget "OSXApplicationTemplateTests" */ = {
 			isa = XCConfigurationList;
@@ -476,6 +521,7 @@
 				C729657E1D173F4F00D74780 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C729657F1D173F4F00D74780 /* Build configuration list for PBXNativeTarget "OSXApplicationTemplateUITests" */ = {
 			isa = XCConfigurationList;
@@ -484,6 +530,7 @@
 				C72965811D173F4F00D74780 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

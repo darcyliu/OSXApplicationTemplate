@@ -8,9 +8,17 @@
 
 #import "SidebarViewController.h"
 
-@interface SidebarViewController ()<NSOutlineViewDelegate,NSOutlineViewDataSource>
+#import "DBManager.h"
+#import "Entity+CoreDataClass.h"
+#import "Entity+CoreDataProperties.h"
+
+@interface SidebarViewController ()<NSOutlineViewDelegate,NSOutlineViewDataSource, NSFetchedResultsControllerDelegate>
 @property(nonatomic, strong) NSScrollView *scrollView;
 @property(nonatomic, strong) NSOutlineView *outlineView;
+
+@property (strong) NSTreeController *treeController;
+
+@property (strong) NSFetchedResultsController *fetchedResultsController;
 @end
 
 @implementation SidebarViewController
@@ -20,9 +28,27 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Entity"];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"created" ascending:YES];
+    NSArray *sortDescriptors = @[sortDescriptor];
+    [fetchRequest setSortDescriptors:sortDescriptors];
+
+    NSManagedObjectContext *context = [DBManager sharedInstance].managedObjectContext;
+    NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc]
+                                                            initWithFetchRequest:fetchRequest
+                                                            managedObjectContext:context
+                                                            sectionNameKeyPath:nil
+                                                            cacheName:@"menu"];
+    NSError *error;
+    if (![fetchedResultsController performFetch:&error]) {
+        NSLog(@"Fetch data failed with error: %@", error);
+    }
+    fetchedResultsController.delegate = self;
+    _fetchedResultsController = fetchedResultsController;
+    
     NSScrollView *scrollView = [[NSScrollView alloc] initWithFrame:self.view.bounds];
     
-    scrollView.hasVerticalScroller      = NO;
+    scrollView.hasVerticalScroller      = YES;
     scrollView.hasHorizontalScroller    = NO;
     scrollView.autohidesScrollers       = YES;
     scrollView.scrollerStyle            = NSScrollerStyleOverlay;
@@ -41,10 +67,11 @@
     outlineView.focusRingType           = NSFocusRingTypeNone;
     outlineView.selectionHighlightStyle = NSTableViewSelectionHighlightStyleRegular;
     outlineView.intercellSpacing        = NSMakeSize(10, 10);
-    outlineView.backgroundColor         = NSColor.clearColor;
+    outlineView.backgroundColor         = NSColor.purpleColor;
     outlineView.delegate                = self;
     outlineView.dataSource              = self;
-    
+    outlineView.autoresizesOutlineColumn= YES;
+    outlineView.autoresizingMask        = NSViewWidthSizable | NSViewHeightSizable;
     NSTableColumn *column   = [[NSTableColumn alloc] initWithIdentifier:[self className]];
     column.resizingMask     = NSTableColumnAutoresizingMask;
     [outlineView addTableColumn:column];
@@ -52,19 +79,33 @@
     
     [scrollView setDocumentView:outlineView];
     _outlineView = outlineView;
+    
+//    NSTreeController *treeController = [[NSTreeController alloc] init];
+//    [treeController setLeafKeyPath:@"isLeaf"];
+//    [treeController setChildrenKeyPath:@"children"];
+//    [outlineView bind:@"content" toObject:treeController withKeyPath:@"arrangedObjects" options:nil];
+//    [outlineView bind:@"sortDescriptors" toObject:treeController withKeyPath:@"sortDescriptors" options:nil];
+//    [outlineView bind:@"selectionIndexPaths" toObject:treeController withKeyPath:@"selectionIndexPaths" options:nil];
+//
+//    _treeController = treeController;
+    
+//    MenuNode *menuNode = [[MenuNode alloc] init];
+//    menuNode.name = @"aaa";
+//    NSTreeNode *node = [[NSTreeNode alloc] initWithRepresentedObject:menuNode];
+//    [treeController insertObject:node atArrangedObjectIndexPath:[NSIndexPath indexPathWithIndex:0]];
 }
 
 #pragma mark - OutlineView delegate
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
     if (item == nil) {
-        return 10;
+        return [[_fetchedResultsController fetchedObjects] count];
     }
     return 0;
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item {
     if (item == nil) {
-        return @(0);//return an object
+        return [_fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];//@(0);//return an object
     }
     return nil;
 }
@@ -89,12 +130,18 @@
     textField.lineBreakMode     = NSLineBreakByTruncatingTail;
     textField.cell.scrollable   = NO;
     textField.wantsLayer        = YES;
+    textField.autoresizingMask  = NSViewWidthSizable | NSViewHeightSizable;
     textField.layer.backgroundColor = [NSColor clearColor].CGColor;
-    [textField setStringValue:@"Title"];
+    NSManagedObject *entity = (NSManagedObject *)item;
+    NSString *title = [entity valueForKey:@"title"];
+    [textField setStringValue: title];
     [textField sizeToFit];
     
-    //NSView *view = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 100, 30)];
-    //[view addSubview:textField];
+//    NSView *view = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 100, 30)];
+//    [view setWantsLayer:YES];
+//    view.layer.backgroundColor = [NSColor clearColor].CGColor;
+//    view.autoresizingMask  = NSViewWidthSizable | NSViewHeightSizable;
+//    [view addSubview:textField];
     
     return textField;
 }
@@ -103,11 +150,50 @@
     return 30;
 }
 
+//- (CGFloat)outlineView:(NSOutlineView *)outlineView sizeToFitWidthOfColumn:(NSInteger)column {
+//    return 100;
+//}
+
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldShowOutlineCellForItem:(id)item {
     return NO;
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldSelectItem:(id)item {
     return YES;
+}
+
+#pragma mark -
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
+    //
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
+    atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
+    newIndexPath:(NSIndexPath *)newIndexPath {
+    switch(type) {
+        case NSFetchedResultsChangeInsert:
+            [_outlineView insertItemsAtIndexes:[NSIndexSet indexSetWithIndex:indexPath.item] inParent:nil withAnimation:NSTableViewAnimationEffectFade];
+            break;
+        case NSFetchedResultsChangeDelete:
+            //[_outlineView removeItemsAtIndexes:[NSIndexSet indexSetWithIndex:indexPath.item] inParent:nil withAnimation:NSTableViewAnimationEffectFade];
+            break;
+        case NSFetchedResultsChangeUpdate:
+            //[_outlineView reloadDataForRowIndexes:<#(nonnull NSIndexSet *)#> columnIndexes:<#(nonnull NSIndexSet *)#>]
+            break;
+        case NSFetchedResultsChangeMove:
+            [_outlineView moveItemAtIndex:indexPath.item inParent:nil toIndex:newIndexPath.item inParent:nil];
+            break;
+    }
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+}
+
+- (void)outlineViewColumnDidResize:(NSNotification *)notification {
+    NSLog(@"notify: %@", notification);
+}
+
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification {
+    NSLog(@"notify: %@", notification);
 }
 @end

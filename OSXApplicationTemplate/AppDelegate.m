@@ -8,11 +8,13 @@
 
 #import "AppDelegate.h"
 #import "MainViewController.h"
+#import "DBManager.h"
 
 static NSString *const kToolbarIdentifier = @"com.example.macos.kToolbarIdentifier";
 static NSString *const kToolbarItemSettingsIdentifier = @"com.example.macos.toolbar.settings";
 static NSString *const kToolbarItemPlayIdentifier = @"com.example.macos.toolbar.play";
 static NSString *const kToolbarItemStopIdentifier = @"com.example.macos.toolbar.stop";
+static NSString *const kToolbarItemAddIdentifier = @"com.example.macos.toolbar.add";
 static NSString *const kToolbarItemSidebarLeftIdentifier = @"com.example.macos.toolbar.sidebar.left";
 
 static NSString *const kWindowFrameAutosaveName = @"com.example.macos.window.frameautosave";
@@ -26,12 +28,14 @@ static NSString *const kWindowFrameAutosaveName = @"com.example.macos.window.fra
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    // Insert code here to initialize your application
-    
     // create the window
-    NSRect contentRect = NSMakeRect(CGRectGetWidth([[NSScreen mainScreen] frame])/2 - 320, CGRectGetHeight([[NSScreen mainScreen] frame])/2-200, 640.0, 400.0);
+    NSSize windowSize      = NSMakeSize(640, 400);
+    NSRect windowFrame      = NSMakeRect((CGRectGetWidth([[NSScreen mainScreen] frame]) - windowSize.width) * 0.5,
+                                         (CGRectGetHeight([[NSScreen mainScreen] frame]) - windowSize.height) * 0.5,
+                                         windowSize.width,
+                                         windowSize.height);
     
-    _window = [[NSWindow alloc] initWithContentRect: contentRect
+    _window = [[NSWindow alloc] initWithContentRect: windowFrame
                                           styleMask: NSWindowStyleMaskTitled
                                                        |NSWindowStyleMaskClosable
                                                        |NSWindowStyleMaskMiniaturizable
@@ -42,7 +46,7 @@ static NSString *const kWindowFrameAutosaveName = @"com.example.macos.window.fra
     [_window setTitle:@"OS X application without xib/storyboard"];
     
     _mainVC = [MainViewController new];
-    [_mainVC.view setFrameSize:NSMakeSize(640, 400)];
+    [_mainVC.view setFrameSize: windowSize];
     _window.contentViewController = _mainVC;
     // remember last location
     //_window.frameAutosaveName = kWindowFrameAutosaveName;
@@ -51,6 +55,9 @@ static NSString *const kWindowFrameAutosaveName = @"com.example.macos.window.fra
     [_window makeKeyAndOrderFront: self];
     
     [self setupToolbar];
+    
+    //[self createSampleData];
+    [self dumpDataToConsole];
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
@@ -67,12 +74,13 @@ static NSString *const kWindowFrameAutosaveName = @"com.example.macos.window.fra
     [toolbar setAllowsUserCustomization: YES];
     [toolbar setAutosavesConfiguration: YES];
     [toolbar setDisplayMode: NSToolbarDisplayModeIconOnly];
+    [toolbar setSizeMode: NSToolbarSizeModeRegular];
     [toolbar setDelegate: self];
     
     [_window setToolbar:toolbar];
     _toolbar = toolbar;
     
-    //_window.titleVisibility = NSWindowTitleVisible;
+    //_window.titleVisibility = NSWindowTitleHidden;
     //_window.titlebarAppearsTransparent = YES;
     //_window.titlebarSeparatorStyle = NSTitlebarSeparatorStyleNone;
 }
@@ -82,15 +90,21 @@ static NSString *const kWindowFrameAutosaveName = @"com.example.macos.window.fra
     return @[kToolbarItemSettingsIdentifier,
              kToolbarItemPlayIdentifier,
              kToolbarItemStopIdentifier,
-             kToolbarItemSidebarLeftIdentifier,
+             kToolbarItemAddIdentifier,
+             //kToolbarItemSidebarLeftIdentifier,
+             NSToolbarToggleSidebarItemIdentifier,
+             NSToolbarSidebarTrackingSeparatorItemIdentifier,
              NSToolbarFlexibleSpaceItemIdentifier,
              NSToolbarSpaceItemIdentifier];
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers: (NSToolbar *)toolbar
 {
-    return @[NSToolbarFlexibleSpaceItemIdentifier,
-             kToolbarItemSidebarLeftIdentifier,
+    return @[NSToolbarToggleSidebarItemIdentifier,
+             //NSToolbarSidebarTrackingSeparatorItemIdentifier,
+             //NSToolbarFlexibleSpaceItemIdentifier,
+             //kToolbarItemSidebarLeftIdentifier,
+             kToolbarItemAddIdentifier,
              kToolbarItemPlayIdentifier,
              kToolbarItemStopIdentifier,
              kToolbarItemSettingsIdentifier];
@@ -127,7 +141,16 @@ static NSString *const kWindowFrameAutosaveName = @"com.example.macos.window.fra
         [toolbarItem setImage:[NSImage imageWithSystemSymbolName:@"stop.circle" accessibilityDescription:@"stop"]];
         [toolbarItem setTarget:self];
         [toolbarItem setAction:@selector(customAction:)];
-    } else if ([itemIdentifier isEqualTo:kToolbarItemSettingsIdentifier]) {
+    } else if ([itemIdentifier isEqualTo:kToolbarItemAddIdentifier]) {
+        toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
+        [toolbarItem setLabel:@"Add"];
+        [toolbarItem setPaletteLabel:[toolbarItem label]];
+        [toolbarItem setToolTip:@"Add"];
+        [toolbarItem setImage:[NSImage imageWithSystemSymbolName:@"plus" accessibilityDescription:@"add"]];
+        [toolbarItem setTarget:self];
+        [toolbarItem setAction:@selector(addAction:)];
+        toolbarItem.navigational = YES;
+    }  else if ([itemIdentifier isEqualTo:kToolbarItemSettingsIdentifier]) {
         toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
         [toolbarItem setLabel:@"Settings"];
         [toolbarItem setPaletteLabel:[toolbarItem label]];
@@ -143,10 +166,69 @@ static NSString *const kWindowFrameAutosaveName = @"com.example.macos.window.fra
 #pragma mark - toolbar actions
 - (void)customAction:(id)sender {
     NSLog(@"customAction: %@", sender);
-    
     NSToolbarItem *toolbarItem = (NSToolbarItem *)sender;
     if ([toolbarItem.itemIdentifier isEqualTo:kToolbarItemSidebarLeftIdentifier]) {
         [_mainVC toggleSidebar:sender];
     }
+}
+
+- (void)addAction:(id)sender {
+    NSManagedObjectContext *context = [DBManager sharedInstance].managedObjectContext;
+    NSManagedObject *newEntity = [NSEntityDescription insertNewObjectForEntityForName:@"Entity" inManagedObjectContext:context];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"HH:mm:ss ZZZ yyyy"];
+    NSString *name = [dateFormatter stringFromDate:[NSDate new]];
+    
+    [newEntity setValue:name forKey:@"title"];
+    [newEntity setValue:@(YES) forKey:@"isLeaf"];
+    [newEntity setValue:[NSDate new] forKey:@"created"];
+    NSError *error = nil;
+    if (![context save:&error]) {
+        NSLog(@"Error saving the managedObjectContext: %@", error);
+    } else {
+        NSLog(@"managedObjectContext successfully saved!");
+    }
+}
+
+#pragma mark -
+- (void)createSampleData {
+    NSManagedObjectContext *context = [DBManager sharedInstance].managedObjectContext;
+    NSManagedObject *newEntity = [NSEntityDescription insertNewObjectForEntityForName:@"Entity" inManagedObjectContext:context];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSString *name = [dateFormatter stringFromDate:[NSDate new]];
+    
+    [newEntity setValue:name forKey:@"title"];
+    [newEntity setValue:@(YES) forKey:@"isLeaf"];
+    [newEntity setValue:[NSDate new] forKey:@"created"];
+    NSError *error = nil;
+    if (![context save:&error]) {
+        NSLog(@"Error saving the managedObjectContext: %@", error);
+    } else {
+        NSLog(@"managedObjectContext successfully saved!");
+    }
+}
+
+- (void)dumpDataToConsole {
+    NSManagedObjectContext *context = [DBManager sharedInstance].managedObjectContext;
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:[NSEntityDescription entityForName:@"Entity" inManagedObjectContext:context]];
+
+    [request setSortDescriptors:[NSArray arrayWithObject: [NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES]]];
+    
+    NSError *error = nil;
+    NSArray *entities = [context executeFetchRequest:request error:&error];
+
+    if (error) {
+        NSLog(@"Error fetching the person entities: %@", error);
+    } else {
+        for (NSManagedObject *entity in entities) {
+            NSLog(@"Found: %@ %@", [entity valueForKey:@"title"],[entity valueForKey:@"created"]);
+            [context deleteObject:entity];
+        }
+    }
+    [context save:&error];
 }
 @end

@@ -12,6 +12,8 @@
 		C729655C1D173F4F00D74780 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C729655B1D173F4F00D74780 /* Assets.xcassets */; };
 		C729656A1D173F4F00D74780 /* OSXApplicationTemplateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C72965691D173F4F00D74780 /* OSXApplicationTemplateTests.m */; };
 		C72965751D173F4F00D74780 /* OSXApplicationTemplateUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = C72965741D173F4F00D74780 /* OSXApplicationTemplateUITests.m */; };
+		C7DEACAB287628CF00B4E5BE /* DBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C7DEACAA287628CF00B4E5BE /* DBManager.m */; };
+		C7DEACB4287641B500B4E5BE /* DBModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C7DEACB2287641B500B4E5BE /* DBModel.xcdatamodeld */; };
 		C7E1F9F32873837A003D85A5 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E1F9F22873837A003D85A5 /* MainViewController.m */; };
 		C7E1F9F628738409003D85A5 /* SidebarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E1F9F528738409003D85A5 /* SidebarViewController.m */; };
 		C7E1F9F92873845A003D85A5 /* ContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E1F9F82873845A003D85A5 /* ContentViewController.m */; };
@@ -47,6 +49,9 @@
 		C72965701D173F4F00D74780 /* OSXApplicationTemplateUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OSXApplicationTemplateUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C72965741D173F4F00D74780 /* OSXApplicationTemplateUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSXApplicationTemplateUITests.m; sourceTree = "<group>"; };
 		C72965761D173F4F00D74780 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C7DEACA9287628CF00B4E5BE /* DBManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DBManager.h; sourceTree = "<group>"; };
+		C7DEACAA287628CF00B4E5BE /* DBManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DBManager.m; sourceTree = "<group>"; };
+		C7DEACB3287641B500B4E5BE /* DBModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DBModel.xcdatamodel; sourceTree = "<group>"; };
 		C7E1F9F12873837A003D85A5 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		C7E1F9F22873837A003D85A5 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		C7E1F9F428738409003D85A5 /* SidebarViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SidebarViewController.h; sourceTree = "<group>"; };
@@ -114,6 +119,9 @@
 				C7E1F9F528738409003D85A5 /* SidebarViewController.m */,
 				C7E1F9F72873845A003D85A5 /* ContentViewController.h */,
 				C7E1F9F82873845A003D85A5 /* ContentViewController.m */,
+				C7DEACA9287628CF00B4E5BE /* DBManager.h */,
+				C7DEACAA287628CF00B4E5BE /* DBManager.m */,
+				C7DEACB2287641B500B4E5BE /* DBModel.xcdatamodeld */,
 			);
 			path = OSXApplicationTemplate;
 			sourceTree = "<group>";
@@ -275,6 +283,8 @@
 				C729655A1D173F4F00D74780 /* main.m in Sources */,
 				C7E1F9F92873845A003D85A5 /* ContentViewController.m in Sources */,
 				C7E1F9F32873837A003D85A5 /* MainViewController.m in Sources */,
+				C7DEACAB287628CF00B4E5BE /* DBManager.m in Sources */,
+				C7DEACB4287641B500B4E5BE /* DBModel.xcdatamodeld in Sources */,
 				C72965571D173F4F00D74780 /* AppDelegate.m in Sources */,
 				C7E1F9F628738409003D85A5 /* SidebarViewController.m in Sources */,
 			);
@@ -533,6 +543,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		C7DEACB2287641B500B4E5BE /* DBModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				C7DEACB3287641B500B4E5BE /* DBModel.xcdatamodel */,
+			);
+			currentVersion = C7DEACB3287641B500B4E5BE /* DBModel.xcdatamodel */;
+			path = DBModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = C729654A1D173F4F00D74780 /* Project object */;
 }
